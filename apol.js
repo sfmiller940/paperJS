@@ -46,23 +46,28 @@ var solveApol = function(s1, s2, s3){
 
 // Canvas setup
 var canvas = document.getElementById('myCanvas');
-var width, height, radius, center;
+var width, height, radius;
 var canvasInit = function(){
 	width = window.innerWidth;
 	height = window.innerHeight;
-	radius = Math.min(height, width) / 2;
-	center = [width / 2, height /2 ];
+	radius = Math.min(height, width) / 8;
 
 	canvas.width = width;
 	canvas.height = height 
 	view.viewSize = new Size(width, height);
 	view.draw();
 }
+
 canvasInit();
-window.onresize = canvasInit;
+window.onresize = function(){
+	for(var t=0; t<3; t++){
+		mainCircs[t].position = new Point( window.innerWidth * mainCircs[t].position.x / width, window.innerHeight * mainCircs[t].position.y / height);
+		mainCircs[t].scale( Math.min(window.innerWidth, window.innerHeight) / 8 / radius );
+	}
+	canvasInit();
+};
 
 // Circle setup
-var radius = 80;
 var speed = 1;
 var mainCircs = new Array(3);
 var mainVel = new Array(3);
@@ -85,6 +90,8 @@ for (t = 0; t<8; t++){
 	apolCircs[t].fillColor = 'red';
 	apolCircs[t].fillColor.alpha = 0.25;
 	apolCircs[t].fillColor.hue = t * 45;
+	apolCircs[t].strokeColor = 'white';
+	apolCircs[t].strokeWidth = 1;
 }
 
 // Main loop
@@ -99,38 +106,37 @@ function onFrame(event){
 		mainCircs[t].position = newPoint;
 	}
 
-	var newCirc = solveApol(1,1,1);
+	var newCirc = solveApol(-1,1,1);
 	apolCircs[0].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[0].scale( 2 * newCirc[2] / apolCircs[0].bounds.width );
 
-	var newCirc = solveApol(-1,1,1);
+	var newCirc = solveApol(1,-1,1);
 	apolCircs[1].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[1].scale( 2 * newCirc[2] / apolCircs[1].bounds.width );
 
-	var newCirc = solveApol(1,-1,1);
+	var newCirc = solveApol(1,1,-1);
 	apolCircs[2].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[2].scale( 2 * newCirc[2] / apolCircs[2].bounds.width );
 
-	var newCirc = solveApol(1,1,-1);
+	var newCirc = solveApol(1,1,1);
 	apolCircs[3].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[3].scale( 2 * newCirc[2] / apolCircs[3].bounds.width );
 
-	var newCirc = solveApol(-1,-1,-1);
+	var newCirc = solveApol(1,-1,-1);
 	apolCircs[4].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[4].scale( 2 * newCirc[2] / apolCircs[4].bounds.width );
 
-	var newCirc = solveApol(1,-1,-1);
+	var newCirc = solveApol(-1,1,-1);
 	apolCircs[5].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[5].scale( 2 * newCirc[2] / apolCircs[5].bounds.width );
 
-	var newCirc = solveApol(-1,1,-1);
+	var newCirc = solveApol(-1,-1,1);
 	apolCircs[6].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[6].scale( 2 * newCirc[2] / apolCircs[6].bounds.width );
 
-	var newCirc = solveApol(-1,-1,1);
+	var newCirc = solveApol(-1,-1,-1);
 	apolCircs[7].position = new Point( newCirc[0],newCirc[1] );
 	apolCircs[7].scale( 2 * newCirc[2] / apolCircs[7].bounds.width );
 
 	for (t = 0; t<8; t++){ apolCircs[t].fillColor.hue = ( apolCircs[t].fillColor.hue + 0.5 ) % 360; }	
-
 }
